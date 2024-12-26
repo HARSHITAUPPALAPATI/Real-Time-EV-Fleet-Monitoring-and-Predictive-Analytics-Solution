@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Status</title>
+    <link rel="stylesheet" href="/static/css/vehicle_status.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Vehicle Status</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Vehicle ID</th>
+                    <th>Owner Name</th>
+                    <th>Registration Number</th>
+                    <th>Battery Status (%)</th>
+                    <th>Speed (km/h)</th>
+                    <th>Location</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehicle in vehicles %}
+                <tr>
+                    <td>{{ vehicle.vehicle_id }}</td>
+                    <td>{{ vehicle.owner_name }}</td>
+                    <td>{{ vehicle.registration_number }}</td>
+                    <td>{{ vehicle.battery_status }}</td>
+                    <td>{{ vehicle.speed }}</td>
+                    <td>{{ vehicle.location }}</td>
+                    <td>{{ vehicle.last_updated }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('success') }}" class="back-button">Back to Dashboard</a>
+    </div>
+</body>
+</html>

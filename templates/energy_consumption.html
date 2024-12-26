@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Consumption Analysis</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .chart-container {
+            margin: 20px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .buttons button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .buttons button:hover {
+            background-color: #45a049;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content h2 {
+            margin: 0 0 20px;
+        }
+
+        .modal-content .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-content .close:hover {
+            color: #000;
+        }
+
+        .modal-content .modal-buttons button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Energy Consumption and Operational Cost Analysis</h1>
+    </header>
+
+    <div class="container">
+        <!-- Line Chart -->
+        <div class="chart-container">
+            <h2>Energy Consumption and Operational Cost Over Time</h2>
+            <div id="lineChart"></div>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="chart-container">
+            <h2>Monthly Energy Consumption Breakdown</h2>
+            <div id="pieChart"></div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="buttons">
+            <button id="openModal">Generate Report</button>
+        </div>
+    </div>
+
+    <!-- Modal for Report Generation -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Select Report Type</h2>
+            <div class="modal-buttons">
+                <button onclick="generateReport('pdf')">PDF Report</button>
+                <button onclick="generateReport('ppt')">PPT Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data from Flask (passed as JSON)
+        const lineChartData = {{ line_chart_data | safe }};
+        const pieChartData = {{ pie_chart_data | safe }};
+
+        // Line Chart
+        const lineTrace1 = {
+            x: lineChartData.dates,
+            y: lineChartData.consumption,
+            type: 'scatter',
+            name: 'Energy Consumption (MW)',
+            line: { color: 'blue' }
+        };
+        const lineTrace2 = {
+            x: lineChartData.dates,
+            y: lineChartData.cost,
+            type: 'scatter',
+            name: 'Operational Cost ($)',
+            line: { color: 'red' }
+        };
+        Plotly.newPlot('lineChart', [lineTrace1, lineTrace2], {
+            title: 'Energy Consumption & Operational Cost Over Time',
+            xaxis: { title: 'Date' },
+            yaxis: { title: 'Values' }
+        });
+
+        // Pie Chart
+        const pieData = [{
+            labels: pieChartData.labels,
+            values: pieChartData.values,
+            type: 'pie'
+        }];
+        Plotly.newPlot('pieChart', pieData, {
+            title: 'Monthly Energy Consumption Breakdown'
+        });
+
+        // Modal Behavior
+        const modal = document.getElementById('reportModal');
+        const openModalBtn = document.getElementById('openModal');
+        const closeModalBtn = document.getElementById('closeModal');
+
+        openModalBtn.addEventListener('click', () => modal.style.display = 'block');
+        closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) modal.style.display = 'none';
+        });
+
+        // Report Generation
+        function generateReport(type) {
+            fetch('/generate_report', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ report_type: type })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    throw new Error('Failed to generate report');
+                }
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `report.${type}`;
+                a.click();
+                modal.style.display = 'none';
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+        }
+    </script>
+</body>
+</html>

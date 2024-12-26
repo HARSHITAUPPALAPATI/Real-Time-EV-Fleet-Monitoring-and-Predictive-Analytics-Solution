@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Battery Health</title>
+    <link rel="stylesheet" href="/static/css/battery_health_status.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Predict Battery Health</h2>
+        <form action="{{ url_for('battery_health_status') }}" method="POST">
+            <label for="capacity">Capacity (mAh):</label>
+            <input type="text" id="capacity" name="capacity" placeholder="Enter capacity in mAh" required>
+            
+            <label for="voltage">Voltage (V):</label>
+            <input type="text" id="voltage" name="voltage" placeholder="Enter voltage in V" required>
+            
+            <label for="temperature">Temperature (°C):</label>
+            <input type="text" id="temperature" name="temperature" placeholder="Enter temperature in °C" required>
+            
+            <button type="submit" class="action-button">Predict</button>
+        </form>
+        
+        {% if health_status %}
+        <div class="result-container">
+            <h3>Prediction Results</h3>
+            <p><strong>Health Score:</strong> {{ health_score | round(2) }}</p>
+            <p><strong>Health Status:</strong> {{ health_status }}</p>
+        </div>
+        {% endif %}
+
+        <div class="buttons-container">
+            <a href="{{ url_for('success') }}" class="action-button back-button">Back to Dashboard</a>
+        </div>
+        <div class="buttons-container">
+            <a href="{{ url_for('route_optimization') }}" class="action-button">Route Optimization</a>
+        </div>
+    </div>
+</body>
+</html>

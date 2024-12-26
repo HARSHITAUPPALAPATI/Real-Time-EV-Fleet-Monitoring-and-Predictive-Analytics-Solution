@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Achievements</title>
+  <link rel="stylesheet" href="/static/css/dbma.css">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <ul>
+        <li><a href="/maintenance_alerts" id="maintenance_alerts">Home</a></li>
+            <li><a href="/achievements" id="achievements">Achievements</a></li>
+            <li><a href="/notification">Notifications</a></li>
+            <li><a href="/signin" id="signin">Sign In</a></li>
+            <li><a href="/signup" id="signup">Sign Up</a></li>
+            <li><a href="/subscribe" id="subscribe">Subscribe</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      </ul>
+    </aside>
+    <main class="content">
+      <h1>Achievements</h1>
+      <div class="achievements-grid">
+        <div class="achievement-card">
+          <h3>First Login</h3>
+          <p>Welcome aboard!</p>
+        </div>
+        <div class="achievement-card">
+          <h3>Profile Complete</h3>
+          <p>All set up!</p>
+        </div>
+        <div class="achievement-card">
+          <h3>First Post</h3>
+          <p>Getting started!</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

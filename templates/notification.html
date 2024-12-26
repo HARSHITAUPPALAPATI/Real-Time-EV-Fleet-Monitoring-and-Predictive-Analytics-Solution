@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Achievements</title>
+  <link rel="stylesheet" href="/static/css/notification.css">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <ul>
+        <li><a href="/dbma" id="dbma">Home</a></li>
+            <li><a href="/achievements" id="achievements">Achievements</a></li>
+            <li><a href=".notification">Notifications</a></li>
+            <li><a href="/signin" id="signin">Sign In</a></li>
+            <li><a href="/signup" id="signup">Sign Up</a></li>
+            <li><a href="/subscribe" id="subscribe">Subscribe</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      </ul>
+    </aside>
+    <div class="notification-container">
+        <h2>EV Fleet Notifications</h2>
+
+        <div class="notification">
+            <h3>Fleet Maintenance Reminder</h3>
+            <p></strong>Ensure that you registered your vehicle with all the details.</p>
+        </div>
+
+        <div class="notification">
+            <h3>Charging Station Update</h3>
+            <p>You can now know the best stations between your source and destination places.</p>
+        </div>
+    </div>
+   
+  </div>
+</body>
+</html>
