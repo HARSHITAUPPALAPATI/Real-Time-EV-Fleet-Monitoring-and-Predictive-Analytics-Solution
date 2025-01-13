@@ -5,28 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register New EV Vehicle</title>
     <link rel="stylesheet" href="/static/css/register_vehicle.css">
+    <style>
+        .error {
+            color: red;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+            
+        }
+        .input-error {
+            border: 1px solid red;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h2>Register Vehicle</h2>
         <form action="{{ url_for('register_vehicle') }}" method="POST">
             <label for="vehicle_id">Vehicle ID:</label>
-            <input type="text" name="vehicle_id" required><br>
+            <input type="text" name="vehicle_id" class="{{ 'input-error' if errors.get('vehicle_id') }}" >
+            <div class="error">{{ errors.get('vehicle_id', '') }}</div>
 
             <label for="owner_name">Owner Name:</label>
-            <input type="text" name="owner_name" required><br>
+            <input type="text" name="owner_name" class="{{ 'input-error' if errors.get('owner_name') }}" >
+            <div class="error">{{ errors.get('owner_name', '') }}</div>
 
             <label for="registration_number">Registration Number:</label>
-            <input type="text" name="registration_number" required><br>
+            <input type="text" name="registration_number" class="{{ 'input-error' if errors.get('registration_number') }}">
+            <div class="error">{{ errors.get('registration_number', '') }}</div>
 
             <label for="battery_status">Battery Status (%):</label>
-            <input type="number" name="battery_status" min="0" max="100" required><br>
+            <input type="number" name="battery_status" min="0" max="100" class="{{ 'input-error' if errors.get('battery_status') }}" >
+            <div class="error">{{ errors.get('battery_status', '') }}</div>
 
             <label for="speed">Speed (km/h):</label>
-            <input type="number" name="speed" required><br>
+            <input type="number" name="speed" class="{{ 'input-error' if errors.get('speed') }}" >
+            <div class="error">{{ errors.get('speed', '') }}</div>
 
             <label for="location">Location:</label>
-            <input type="text" name="location" required><br>
+            <input type="text" name="location" class="{{ 'input-error' if errors.get('location') }}" >
+            <div class="error">{{ errors.get('speed', '') }}</div>
+            
 
             <button type="submit" class="register-button">Register Vehicle</button>
         </form>
