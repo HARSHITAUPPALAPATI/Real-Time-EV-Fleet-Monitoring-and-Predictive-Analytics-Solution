@@ -1,95 +1,108 @@
-/* Background styling */
+/* General Styling */
 body {
     margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
-    background: url('/static/images/image.jpg') no-repeat center center fixed;
-    background-size: cover;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: url('/static/images/image.jpg') no-repeat center center fixed;
+    background-size: cover;
 }
 
-.background {
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    backdrop-filter: blur(5px);
+    z-index: 1;
 }
 
-/* Form container styling */
-.form-container {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 30px;
+.register-container {
+    position: relative;
+    z-index: 2;
+    width: 500px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
     border-radius: 10px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-    width: 350px;
+    padding: 30px 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
 
-/* Form heading */
-h1 {
+.register-container h2 {
+    color: #040404;
     margin-bottom: 20px;
-    color: #333;
 }
 
-/* Form group styling */
-.form-group {
-    margin-bottom: 15px;
-    text-align: left;
+.input-box {
+    margin-bottom: 20px;
+    position: relative;
 }
 
-label {
-    font-size: 14px;
-    color: #555;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
+.input-box input {
+    width: 85%;
+    padding: 10px 40px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 14px;
-    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
 }
 
-input:focus {
-    border-color: #007bff;
+.input-box input:focus {
     outline: none;
+    background: rgba(255, 255, 255, 1);
 }
 
-/* Button styling */
-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
+.input-box i {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #555;
+    font-size: 20px;
+}
+
+.register-btn {
+    width: 100%;
+    padding: 10px;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
+    background: #080808;
+    color: #fff;
+    font-size: 18px;
     cursor: pointer;
-    width: 100%;
-    margin-top: 10px;
+    transition: 0.3s;
 }
 
-button:hover {
-    background-color: #0056b3;
+.register-btn:hover {
+    background: #0056b3;
 }
 
-/* Footer styling */
+.error {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: red;
+    font-size: 12px;
+}
+
+.input-error {
+    border-color: red;
+}
+
 .footer {
-    margin-top: 15px;
-}
-
-.footer p {
+    margin-top: 10px;
+    color: #fff;
     font-size: 14px;
-    color: #666;
 }
 
 .footer a {
-    color: #007bff;
+    color: #030303;
     text-decoration: none;
 }
 
