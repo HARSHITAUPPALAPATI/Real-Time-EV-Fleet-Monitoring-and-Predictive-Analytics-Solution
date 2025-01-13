@@ -1,69 +1,83 @@
-/* Register Vehicle Styles */
+/* General Reset */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background: url('/static/images/image.jpg') no-repeat center center fixed; /* Add a background image */
+    background-size: cover;
     display: flex;
     justify-content: center; /* Center the container horizontally */
     align-items: center; /* Center the container vertically */
     height: 100vh; /* Full viewport height */
     margin: 0;
-}
-h2 {
-    text-align: center; /* Center the text horizontally */
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #0f1011;
+    color: #090909; /* Text color for better contrast */
 }
 
+/* Form Container */
 .container {
-    width: 400px;  /* Set the width of the form to make it a standing rectangle */
+    width: 400px; /* Fixed width for the form */
     padding: 30px;
-    background-color: #a3e1f3;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+    backdrop-filter: blur(100px); /* Glassmorphism effect */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for a lifted effect */
+    text-align: center;
 }
 
+/* Header */
 h2 {
-    
     margin-bottom: 20px;
     font-size: 24px;
-    color: #0d0d0d;
+    color: #0e0e0e; /* Bright white for better readability */
 }
 
+/* Labels */
 label {
     font-size: 14px;
     margin-bottom: 5px;
     display: block;
+    text-align: left;
+    color: #080707; /* Light gray for labels */
 }
 
+/* Input Fields */
 input[type="text"], input[type="number"], select {
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
-    border: 1px solid #141313;
+    border: none;
     border-radius: 4px;
-    box-sizing: border-box; /* Ensure padding and border are included in width */
+    background: rgba(255, 255, 255, 0.2); /* Transparent input background */
+    color: #0f0f0f; /* White text for better visibility */
+    box-sizing: border-box; /* Include padding and border in width */
+    outline: none;
+    font-size: 14px;
 }
 
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    background: rgba(255, 255, 255, 0.3); /* Slightly brighter background on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Blue glow on focus */
+}
+
+/* Button */
 button {
     width: 100%;
     padding: 12px;
-    background-color: #007bff;
-    color: #0e0d0d;
+    background-color: #0b0b0c;
+    color: #fff;
     border: none;
     border-radius: 4px;
     font-size: 16px;
     cursor: pointer;
-    
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Darker blue on hover */
 }
 
+/* Footer */
 footer {
     text-align: center;
     font-size: 12px;
-    color: #777;
+    color: #ddd; /* Light gray for footer text */
     margin-top: 20px;
 }
