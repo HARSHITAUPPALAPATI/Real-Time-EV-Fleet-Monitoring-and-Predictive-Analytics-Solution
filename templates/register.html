@@ -3,36 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="/static/css/register.css">
+    <title>Register Page</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
 </head>
 <body>
-    <div class="background">
-        <div class="form-container">
-            <form method="POST">
-                <h1>Register</h1>
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <div class="form-group">
-                    <label for="city">City:</label>
-                    <input type="text" id="city" name="city" required>
-                </div>
-                <button type="submit">Register</button>
-                <div class="footer">
-                    <p>Already have an account? <a href="/login">Login</a></p>
-                </div>
-            </form>
+    <div class="register-container">
+        <h2>Register</h2>
+        <form id="registerForm" action="/register" method="post">
+            <div class="input-box">
+                <i class="bx bxs-user"></i>
+                <input type="text" id="username" name="username" placeholder="Username">
+                <div id="usernameError" class="error"></div>
+            </div>
+            <div class="input-box">
+                <i class="bx bxs-envelope"></i>
+                <input type="text" id= "email" name="email" placeholder="Email">
+                <div id="emailError" class="error"></div>
+            </div>
+            <div class="input-box">
+                <i class="bx bxs-lock-alt"></i>
+                <input type="password" id="password" name="password" placeholder="Password">
+                <div id="passwordError" class="error"></div>
+            </div>
+            <div class="input-box">
+                <i class="bx bxs-map"></i>
+                <input type="text" id= "city" name="city" placeholder="City">
+                <div id="cityError" class="error"></div>
+            </div>            
+            <button type="submit" class="register-btn">Register</button>
+        </form>
+        <div class="footer">
+            <p>Already have an account? <a href="/login">Login</a></p>
         </div>
     </div>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            // Clear previous error messages
+            document.querySelectorAll('.error').forEach(errorDiv => {
+                errorDiv.textContent = '';
+            });
+            document.querySelectorAll('input').forEach(input => {
+                input.classList.remove('input-error');
+            });
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errors => {
+                        Object.keys(errors).forEach(key => {
+                            document.getElementById(key + 'Error').textContent = errors[key];
+                            document.getElementById(key).classList.add('input-error');
+                        });
+                    });
+                } else {
+                    return response.json().then(data => {
+                        alert(data.success); // Show success message
+                        form.reset(); // Clear the form on success
+                    });
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
 </body>
 </html>
