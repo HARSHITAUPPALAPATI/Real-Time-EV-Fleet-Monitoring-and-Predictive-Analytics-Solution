@@ -1,7 +1,8 @@
-/* route_optimization.css */
+/* login.css */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    background: url('/static/images/image.jpg') no-repeat center center fixed;
+    background-size: cover;
     margin: 0;
     padding: 0;
     display: flex;
@@ -11,108 +12,68 @@ body {
 }
 
 .container {
-    background: #a3e1f3;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 20px 30px;
-    max-width: 400px;
-    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(100px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 30px 40px;
+    width: 400px;
     text-align: center;
+    color: #080707;
 }
 
 h1 {
     font-size: 1.8rem;
-    margin-bottom: 10px;
-    color: #080707;
-}
-
-p {
-    font-size: 0.95rem;
-    color: #555555;
     margin-bottom: 20px;
 }
 
 form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-}
-
-label {
-    text-align: left;
-    font-weight: bold;
-    font-size: 0.9rem;
-    color: #444444;
+    gap: 20px;
 }
 
 input {
     padding: 10px;
-    border: 1px solid #100f0f;
+    border: none;
     border-radius: 5px;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #111010;
 }
 
 input:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 button {
-    background-color: #007bff;
-    color: rgb(17, 8, 8);
+    background-color: #111212;
+    color: #fff;
     border: none;
     padding: 10px 15px;
     border-radius: 5px;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
-    border: 1px solid #0d0c0c;
 }
 
 button:hover {
     background-color: #0056b3;
 }
 
-ul {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0 0;
-    text-align: left;
-}
-
-li {
-    margin-bottom: 15px;
-    padding: 10px;
-    background: #f9f9f9;
-    border: 1px solid #eaeaea;
-    border-radius: 5px;
-}
-
-strong {
-    font-size: 1rem;
-    color: #222222;
-}
-
-h2 {
-    font-size: 1.2rem;
-    color: #333333;
-    margin-top: 30px;
-}
-
-.action-button {
-    display: inline-block;
+a {
+    color: #00bfff;
     text-decoration: none;
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: rgb(14, 13, 13);
-    border-radius: 5px;
-    font-size: 1rem;
-    text-align: center;
-    transition: background-color 0.3s;
-    border: 1px solid #0d0c0c;
+    font-size: 0.9rem;
 }
 
-.action-button:hover {
-    background-color: #0056b3;
+a:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    margin-top: 10px;
+    font-size: 0.9rem;
 }
