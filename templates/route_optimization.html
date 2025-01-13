@@ -5,46 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Route Optimization</title>
     <link rel="stylesheet" href="/static/css/route_optimization.css">
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+            text-align: left;
+        }
+        .input-error {
+            border: 1px solid red;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-    <h1>Route Optimization</h1>
-    <p>Select your source and destination cities, and we will find the best EV stations along the route.</p>
+        <h1>Route Optimization</h1>
+        <p>Select your source and destination cities, and we will find the best EV stations along the route.</p>
 
-    <form method="POST">
-        <label for="source_city">Source City:</label>
-        <input type="text" id="source_city" name="source_city" required>
+        <form method="POST">
+            <label for="source_city">Source City:</label>
+            <input type="text" id="source_city" name="source_city" placeholder="Enter source city" 
+                   class="{{ 'input-error' if errors.get('source_city') }}">
+            <div class="error">{{ errors.get('source_city', '') }}</div>
 
-        <label for="destination_city">Destination City:</label>
-        <input type="text" id="destination_city" name="destination_city" required>
+            <label for="destination_city">Destination City:</label>
+            <input type="text" id="destination_city" name="destination_city" placeholder="Enter destination city" 
+                   class="{{ 'input-error' if errors.get('destination_city') }}">
+            <div class="error">{{ errors.get('destination_city', '') }}</div>
 
-        <label for="battery_level">Battery Level (%):</label>
-        <input type="number" id="battery_level" name="battery_level" min="0" max="100">
+            <label for="battery_level">Battery Level (%):</label>
+            <input type="number" id="battery_level" name="battery_level" placeholder="Enter battery level (0-100)" min="0" max="100"
+                   class="{{ 'input-error' if errors.get('battery_level') }}">
+            <div class="error">{{ errors.get('battery_level', '') }}</div>
 
-        <button type="submit">Find Best Stations</button>
+            <button type="submit">Find Best Stations</button>
+        </form>
+
         
-        <div class="buttons-container">
-            <a href="{{ url_for('success') }}" class="action-button back-button">Back to Dashboard</a>
-        </div>
-    </form>
 
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
 
-    {% if stations %}
-        <h2>Best Stations Between {{ source }} and {{ destination }}</h2>
-        <ul>
-        {% for station in stations %}
-            <li>
-                <strong>{{ station.name }}</strong><br>
-                Latitude: {{ station.lat }}<br>
-                Longitude: {{ station.lng }}<br>
-                Distance: {{ station.distance }} km<br>
-                Charging Speed: {{ station.charging_speed }} kW
-            </li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-</body>
+        {% if stations %}
+            <h2>Best Stations Between {{ source }} and {{ destination }}</h2>
+            <ul>
+            {% for station in stations %}
+                <li>
+                    <strong>{{ station.name }}</strong><br>
+                    Latitude: {{ station.lat }}<br>
+                    Longitude: {{ station.lng }}<br>
+                    Distance: {{ station.distance }} km<br>
+                    Charging Speed: {{ station.charging_speed }} kW
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</head>
+
 </html>
