@@ -5,21 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Predict Battery Health</title>
     <link rel="stylesheet" href="/static/css/battery_health_status.css">
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .input-error {
+            border: 1px solid red;
+        }
+    </style>
 </head>
 <body>
     <div class="form-container">
         <h2>Predict Battery Health</h2>
         <form action="{{ url_for('battery_health_status') }}" method="POST">
             <label for="capacity">Capacity (mAh):</label>
-            <input type="text" id="capacity" name="capacity" placeholder="Enter capacity in mAh" required>
-            
+            <input type="text" id="capacity" name="capacity" placeholder="Enter capacity in mAh" 
+                   class="{{ 'input-error' if errors.get('capacity') }}">
+            <div class="error">{{ errors.get('capacity', '') }}</div>
+
             <label for="voltage">Voltage (V):</label>
-            <input type="text" id="voltage" name="voltage" placeholder="Enter voltage in V" required>
-            
+            <input type="text" id="voltage" name="voltage" placeholder="Enter voltage in V" 
+                   class="{{ 'input-error' if errors.get('voltage') }}">
+            <div class="error">{{ errors.get('voltage', '') }}</div>
+
             <label for="temperature">Temperature (°C):</label>
-            <input type="text" id="temperature" name="temperature" placeholder="Enter temperature in °C" required>
-            
+            <input type="text" id="temperature" name="temperature" placeholder="Enter temperature in °C" 
+                   class="{{ 'input-error' if errors.get('temperature') }}">
+            <div class="error">{{ errors.get('temperature', '') }}</div>
+
             <button type="submit" class="action-button">Predict</button>
+            
+           
         </form>
         
         {% if health_status %}
