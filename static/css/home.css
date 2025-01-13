@@ -1,3 +1,5 @@
+/* General body styles */
+
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
@@ -7,11 +9,74 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background: url('/static/images/image.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Overlay for blur effect */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3); /* Semi-transparent overlay */
+    backdrop-filter: blur(10px); /* Blurred background effect */
+    z-index: -1; /* Ensure it stays behind the content */
+}
+
+/* Center container */
+.home-container {
+    background-color: rgba(255, 255, 255, 0.8); /* Transparent white background */
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Main title styles */
+.main-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #090a0a;
+}
+
+/* Subtitle (Welcome) */
+.sub-title {
+    margin: 10px 0 20px;
+    font-size: 1.5rem;
+    color: #0d0e0f;
+}
+
+/* Button group */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Buttons */
+.button-group .btn {
+    background-color: #060606;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.button-group .btn:hover {
+    background-color: #0d47a1;
 }
 
 /* Home Container */
 .home-container {
-    background-color: #a3e1f3;
     padding: 30px 40px;
     border-radius: 15px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -34,21 +99,4 @@ h1 {
     margin-top: 20px;
 }
 
-/* Buttons */
-.btn {
-    background-color: #004aad;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    
-    border: 1px solid #100f0f;
-}
 
-.btn:hover {
-    background-color: #003580;
-}
