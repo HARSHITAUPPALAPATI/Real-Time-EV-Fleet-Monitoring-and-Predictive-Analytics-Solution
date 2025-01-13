@@ -1,84 +1,109 @@
-* {
+/* General Styling */
+body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
     font-family: Arial, sans-serif;
-}
-
-body {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     background: url('/static/images/image.jpg') no-repeat center center fixed;
     background-size: cover;
+    padding-left: 100px;
 }
 
-.background {
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    backdrop-filter: blur(10px); /* Blurred background effect */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    backdrop-filter: blur(5px);
+    z-index: 1;
 }
 
-.form-container {
-    background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+.login-container {
+    position: relative;
+    z-index: 2;
+    width: 500px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
     border-radius: 10px;
-    padding: 20px 30px;
-    width: 300px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 30px 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
 
-h1 {
+.login-container h2 {
+    color: #090909;
     margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
 }
 
-.form-group {
-    margin-bottom: 15px;
+.input-box {
+    margin-bottom: 20px;
+    position: relative;
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
+.input-box input {
+    width: 85%;
+    padding: 10px 40px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 14px;
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
 }
 
-input:focus {
-    border-color: #007bff;
+.input-box input:focus {
     outline: none;
+    background: rgba(255, 255, 255, 1);
 }
 
-.btn {
-    background-color: #007bff;
-    color: #fff;
+.input-box i {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #555;
+    font-size: 20px;
+}
+
+.login-btn {
+    width: 100%;
     padding: 10px;
     border: none;
     border-radius: 5px;
+    background: #050505;
+    color: #fff;
+    font-size: 18px;
     cursor: pointer;
-    font-size: 14px;
-    width: 100%;
+    transition: 0.3s;
 }
 
-.btn:hover {
-    background-color: #0056b3;
+.login-btn:hover {
+    background: #0056b3;
+}
+
+.error {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: red;
+    font-size: 12px;
+}
+
+.input-error {
+    border-color: red;
 }
 
 .footer {
-    margin-top: 15px;
-    font-size: 12px;
-    color: #555;
+    margin-top: 10px;
+    color: #fff;
+    font-size: 14px;
 }
 
 .footer a {
-    color: #007bff;
+    color: #0a0b0b;
     text-decoration: none;
 }
 
