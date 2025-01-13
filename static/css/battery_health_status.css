@@ -2,19 +2,23 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+    background: url('/static/images/image.jpg') no-repeat center center fixed;
+    background-size: cover;
     background-color: #f5f5f5;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* Aligns horizontally */
+    align-items: center; /* Aligns vertically */
     height: 100vh;
+    color: #090808;
 }
 
 /* Form Container */
 .form-container {
-    background-color: #a3e1f3;
-    padding: 20px 30px;
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+    backdrop-filter: blur(100px); /* Glass effect */
+    padding: 30px 40px;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Light shadow */
     width: 100%;
     max-width: 400px;
     text-align: center;
@@ -22,6 +26,8 @@ body {
 
 .form-container h2 {
     margin-bottom: 20px;
+    color: #131212;
+    font-size: 1.8rem;
     color: #171a1a;
 }
 
@@ -31,6 +37,7 @@ form label {
     text-align: left;
     margin: 10px 0 5px;
     font-size: 14px;
+    color: #050404;
     color: #333;
 }
 
@@ -38,6 +45,17 @@ form input {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.2); /* Transparent input */
+    color: #0f0e0e;
+    outline: none;
+}
+
+form input:focus {
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     border: 1px solid #0d0c0c;
     border-radius: 5px;
     font-size: 14px;
@@ -46,8 +64,8 @@ form input {
 /* Buttons */
 .action-button {
     display: inline-block;
-    background-color: #4399ea;
-    color: #161414;
+    background-color: #0d0d0d;
+    color: #faf5f5;
     font-size: 16px;
     padding: 10px 20px;
     border: none;
@@ -55,6 +73,7 @@ form input {
     cursor: pointer;
     text-decoration: none;
     text-align: center;
+    transition: background-color 0.3s ease;
     border: 1px solid #0d0c0c;
 }
 
@@ -63,7 +82,7 @@ form input {
 }
 
 .back-button {
-    background-color: #4399ea;
+    background-color: #060606;
     margin-top: 10px;
 }
 
