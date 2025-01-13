@@ -3,6 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <style>
+        /* Optional CSS for error styling */
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .input-error {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm" action="/login" method="post">
+            <div class="input-box">
+                <i class="bx bxs-envelope"></i>
+                <input type="text" id="email" name="email" placeholder="Email">
+                <div id="emailError" class="error"></div>
+            </div>
+            <div class="input-box">
+                <i class="bx bxs-lock-alt"></i>
+                <input type="password" id="password" name="password" placeholder="Password">
+                <div id="passwordError" class="error"></div>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        <div class="footer">
+            <p>Don't have an account? <a href="/register">Register</a></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            // Clear previous error messages
+            document.querySelectorAll('.error').forEach(errorDiv => {
+                errorDiv.textContent = '';
+            });
+            document.querySelectorAll('input').forEach(input => {
+                input.classList.remove('input-error');
+            });
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errors => {
+                        // Display validation errors
+                        Object.keys(errors).forEach(key => {
+                            const errorDiv = document.getElementById(key + 'Error');
+                            if (errorDiv) {
+                                errorDiv.textContent = errors[key];
+                            }
+                            const input = document.getElementById(key);
+                            if (input) {
+                                input.classList.add('input-error');
+                            }
+                        });
+                    });
+                } else {
+                    return response.json().then(data => {
+                        alert(data.success); // Show success message
+                        window.location.href = '/success'; // Redirect on successful login
+                    });
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
     <title>Login</title>
     <link rel="stylesheet" href="/static/css/login.css">
 </head>
