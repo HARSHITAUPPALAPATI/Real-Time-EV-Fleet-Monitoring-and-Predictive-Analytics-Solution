@@ -7,6 +7,8 @@ import plotly.graph_objects as go
 import plotly.express as px
 import json
 from report_generator import generate_charts, generate_pdf, generate_ppt
+import re
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session handling
@@ -20,6 +22,13 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
     city = db.Column(db.String(80), nullable=True)
+
+class duser(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), nullable=False)
+    password = db.Column(db.String(80), nullable=False)
+    city = db.Column(db.String(80), nullable=True)
+
 
 # Vehicle model
 class Vehicle(db.Model):
@@ -37,65 +46,138 @@ class Vehicle(db.Model):
 def home():
     return render_template('home.html')
 
-# Register Page
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        city = request.form['city']
-
-        # Check if user exists
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return render_template('already_exists.html')  # User exists page
-        else:
-            # Create new user
-            new_user = User(username=username, email=email, password=password, city=city)
-            db.session.add(new_user)
-            db.session.commit()
-            return redirect(url_for('login'))
-    return render_template('register.html')
-
-# Login Page
+# LOGIN PAGE
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form.get("email")
+        password = request.form.get("password")
+        
+        errors = {}
 
-        # Check if user exists
+        # Email validation
+        if not email:
+            errors['email'] = 'Email is required.'
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            errors['email'] = 'Invalid email format.'
+
+        # Password validation
+        if not password:
+            errors['password'] = 'Password is required.'
+        elif len(password) < 8:
+            errors['password'] = 'Password must be at least 8 characters long.'
+
+        # Check if there are any validation errors
+        if errors:
+            return jsonify(errors), 400
+
+        # Database query to check user credentials
         user = User.query.filter_by(email=email, password=password).first()
         if user:
-            session['user'] = user.username  # Save user session
-            return redirect(url_for('success'))
+            session['logged_in'] = True
+            session['email'] = email
+            return jsonify({'success': 'Login successful! Redirecting...'}), 200
         else:
-            flash('Invalid email or password!', 'error')
+            return jsonify({'email': 'Invalid email or password!'}), 400
+
     return render_template('login.html')
+
+
+# Register page
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form["username"]
+        email = request.form["email"]
+        password = request.form["password"]
+        city = request.form["city"]
+        
+        errors = {}
+        
+        # Check if username or email already exists
+        existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+        if existing_user:
+            errors['username'] = 'Username or Email already exists!'
+        
+        if not username:
+            errors['username'] = 'Username is required.'
+        if not email:
+            errors['email'] = 'Email is required.'
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            errors['email'] = 'Invalid email format.'
+        if not password:
+            errors['password'] = 'Password is required.'
+        elif len(password) <= 8:
+            errors['password'] = 'Password must be more than 8 characters.'
+        if not city:
+            errors['city'] = 'City is required.'
+
+        if errors:
+            return jsonify(errors), 400
+
+        # Create new user and add to the database
+        new_user = User(username=username, email=email, password=password, city=city)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return jsonify({'success': 'Registration successful! Please log in.'}), 200
+        
+    return render_template('register.html')
 
 # Success Page
 @app.route('/success')
 def success():
-    if 'user' not in session:
-        return redirect(url_for('login'))
-    return render_template('success.html', username=session['user'])
+    return render_template('success.html')
 
 
 # Register Vehicle Page
 @app.route('/register_vehicle', methods=['GET', 'POST'])
 def register_vehicle():
-    if 'user' not in session:
-        return redirect(url_for('login'))
-    if request.method == 'POST':
-        try:
-            vehicle_id = request.form['vehicle_id']
-            owner_name = request.form['owner_name']
-            registration_number = request.form['registration_number']
-            battery_status = request.form['battery_status']
-            speed = request.form['speed']
-            location = request.form['location']
+    
+    errors = {}
 
+    if request.method == 'POST':
+        vehicle_id = request.form.get('vehicle_id', '').strip()
+        owner_name = request.form.get('owner_name', '').strip()
+        registration_number = request.form.get('registration_number', '').strip()
+        battery_status = request.form.get('battery_status', '').strip()
+        speed = request.form.get('speed', '').strip()
+        location = request.form.get('location', '').strip()
+
+        # Validation
+        if not vehicle_id:
+            errors['vehicle_id'] = "Vehicle ID is required."
+        elif len(vehicle_id) > 20:
+            errors['vehicle_id'] = "Vehicle ID must be 20 characters or fewer."
+
+        if not owner_name:
+            errors['owner_name'] = "Owner Name is required."
+        elif not owner_name.isalpha():
+            errors['owner_name'] = "Owner Name must contain only letters."
+
+        if not registration_number:
+            errors['registration_number'] = "Registration Number is required."
+        elif len(registration_number) > 15:
+            errors['registration_number'] = "Registration Number must be 15 characters or fewer."
+
+        if not battery_status:
+            errors['battery_status'] = "Battery Status is required."
+        elif not battery_status.isdigit() or not (0 <= int(battery_status) <= 100):
+            errors['battery_status'] = "Battery Status must be a number between 0 and 100."
+
+        if not speed:
+            errors['speed'] = "Speed is required."
+        elif not speed.isdigit() or int(speed) < 0:
+            errors['speed'] = "Speed must be a positive number."
+
+        if not location:
+            errors['location'] = "Location is required."
+
+        # If there are errors, re-render the form with error messages
+        if errors:
+            return render_template('register_vehicle.html', errors=errors)
+
+        try:
             # Check if vehicle ID already exists
             existing_vehicle = Vehicle.query.filter_by(vehicle_id=vehicle_id).first()
             if existing_vehicle:
@@ -110,7 +192,7 @@ def register_vehicle():
                 battery_status=int(battery_status),
                 speed=int(speed),
                 location=location,
-                last_updated=datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
+                last_updated=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             )
             db.session.add(new_vehicle)
             db.session.commit()
@@ -119,29 +201,45 @@ def register_vehicle():
         except Exception as e:
             flash(f"Error: {str(e)}", "error")
             return redirect(url_for('register_vehicle'))
-    return render_template('register_vehicle.html')
+    
+    # Initial render with no errors
+    return render_template('register_vehicle.html', errors={})
 
 # Vehicle Status Page
 @app.route('/vehicle_status')
 def vehicle_status():
-    if 'user' not in session:
-        return redirect(url_for('login'))
     vehicles = Vehicle.query.all()  # Fetch all vehicles
     return render_template('vehicle_status.html', vehicles=vehicles)
 
 # Route Optimization
 @app.route('/route_optimization', methods=['GET', 'POST'])
 def route_optimization():
+    errors = {}
     if request.method == 'POST':
         # Get city names and battery level from the HTML form
         source_city = request.form.get('source_city', '').strip()
         destination_city = request.form.get('destination_city', '').strip()
-        battery = request.form.get('battery', 50)  # Default battery level 50%
+        battery_level = request.form.get('battery_level', '').strip()
 
-        if not source_city or not destination_city:
-            error_message = "Both source and destination cities are required."
-            return render_template('route_optimization.html', error=error_message)
-        
+        # Validate inputs
+        if not source_city:
+            errors['source_city'] = "Source city is required."
+        if not destination_city:
+            errors['destination_city'] = "Destination city is required."
+        if battery_level:
+            if not battery_level.isdigit() or not (0 <= int(battery_level) <= 100):
+                errors['battery_level'] = "Battery level must be a number between 0 and 100."
+        else:
+            errors['battery_level'] = "Battery level is required."
+
+        if errors:
+            return render_template(
+                'route_optimization.html', errors=errors
+            )
+
+        # Default battery level if not provided
+        battery_level = int(battery_level) if battery_level else 50
+
         open_cage_api_key = 'cf7d55ca167e4082983a92e8d03f063d'  # Replace with your OpenCage API Key
         open_charge_api_key = 'e5daf4e0-473e-4692-ae2e-3793b1f1d567'  # Replace with your Open Charge Map API Key
 
@@ -153,37 +251,70 @@ def route_optimization():
             return render_template('route_optimization.html', error=error_message)
 
         # Find the best EV stations based on the battery percentage
-        best_stations = find_best_stations(open_charge_api_key, source_coords, dest_coords, battery)
+        best_stations = find_best_stations(open_charge_api_key, source_coords, dest_coords, battery_level)
 
         if not best_stations:
             error_message = "No EV stations found along the route."
             return render_template('route_optimization.html', error=error_message)
 
         # Render the page with the results
-        return render_template('route_optimization.html', source=source_city, destination=destination_city, stations=best_stations)
+        return render_template(
+            'route_optimization.html',
+            source=source_city,
+            destination=destination_city,
+            stations=best_stations,
+            errors={}
+        )
 
-    return render_template('route_optimization.html')
+    return render_template('route_optimization.html', errors={})
 
 # Battery Health Status
 @app.route('/battery_health_status', methods=['GET', 'POST'])
 def battery_health_status():
+    errors = {}
     if request.method == 'POST':
-        # Retrieve form data
         try:
-            capacity = float(request.form['capacity'])
-            voltage = float(request.form['voltage'])
-            temperature = float(request.form['temperature'])
-            
-            # Example logic to predict battery health
+            capacity = request.form.get('capacity')
+            voltage = request.form.get('voltage')
+            temperature = request.form.get('temperature')
+
+            # Validate inputs
+            if not capacity or not capacity.replace('.', '', 1).isdigit():
+                errors['capacity'] = "Capacity must be a numeric value."
+            if not voltage or not voltage.replace('.', '', 1).isdigit():
+                errors['voltage'] = "Voltage must be a numeric value."
+            if not temperature or not temperature.replace('.', '', 1).isdigit():
+                errors['temperature'] = "Temperature must be a numeric value."
+
+            if errors:
+                return render_template(
+                    'battery_health_status.html', errors=errors
+                )
+
+            # Convert to floats if valid
+            capacity = float(capacity)
+            voltage = float(voltage)
+            temperature = float(temperature)
+
+            # Predict battery health
             health_score = (capacity / 1000) * (voltage / 4.2) - (temperature / 100)
             health_status = "Good" if health_score > 0.8 else "Moderate" if health_score > 0.5 else "Poor"
-            
-            # Render the result on the same page
-            return render_template('battery_health_status.html', health_status=health_status, health_score=health_score)
+
+            return render_template(
+                'battery_health_status.html',
+                health_status=health_status,
+                health_score=health_score,
+                errors={}
+            )
         except ValueError:
-            flash("Invalid input. Please enter numeric values.")
-            return redirect(url_for('battery_health_status'))
-    return render_template('battery_health_status.html')
+            errors['general'] = "Invalid input. Please enter valid numeric values."
+            return render_template(
+                'battery_health_status.html', errors=errors
+            )
+    return render_template('battery_health_status.html', errors={})
+
+
+
 @app.route('/maintenance_alerts')
 def maintenance_alerts():
     return render_template('maintenance_alerts.html')
@@ -311,32 +442,3 @@ def generate_report():
 
 if __name__ == '__main__':
     app.run(debug=True) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
