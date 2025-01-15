@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyse Driver Behavior</title>
+    <link rel="stylesheet" href="/static/css/battery_health_status.css">
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .input-error {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Analyse Driver Behavior</h2>
+        <form action="{{ url_for('driver_behavior') }}" method="POST">
+            <label for="speed">speed  (km):</label>
+            <input type="text" id="speed" name="speed" placeholder="Enter speed in  (km)" 
+                   class="{{ 'input-error' if errors.get('speed') }}">
+            <div class="error">{{ errors.get('speed', '') }}</div>
+
+            <label for="acceleration">acceleration  (m/sÂ²):</label>
+            <input type="text" id="acceleration" name="acceleration" placeholder="Enter acceleration in  (km)" 
+                   class="{{ 'input-error' if errors.get('acceleration') }}">
+            <div class="error">{{ errors.get('acceleration', '') }}</div>
+
+            <label for="fatigue_level">Fatigue level:</label>
+            <input type="text" id="fatigue_level" name="fatigue_level" placeholder="Enter fatigue level"
+                    class="{{ 'input-error' if errors.get('road_condition') }}">
+            <div class="error">{{ errors.get('fatigue_level', '') }}</div>
+
+            <label for="road_condition">Road condition:</label>
+            <input type="text" id="road_condition" name="road_condition" placeholder="Enter road condition"
+                    class="{{ 'input-error' if errors.get('road_condition') }}">
+            <div class="error">{{ errors.get('road_condition', '') }}</div>
+
+            <button type="submit" class="action-button">Analyse driver behavior</button>
+            
+           
+        </form>
+        
+        {% if behavior %}
+        <div class="result-container">
+            <h3>Prediction Results</h3>
+            <p><strong>Driver behavior:</strong> {{ behavior }}</p>
+        </div>
+        {% endif %}
+
+        <div class="buttons-container">
+            <a href="{{ url_for('success') }}" class="action-button back-button">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>
