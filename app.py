@@ -8,6 +8,10 @@ import plotly.express as px
 import json
 from report_generator import generate_charts, generate_pdf, generate_ppt
 import re
+import joblib  # For loading the model
+import pickle
+from sklearn.preprocessing import LabelEncoder
+
 
 
 app = Flask(__name__)
@@ -312,6 +316,88 @@ def battery_health_status():
                 'battery_health_status.html', errors=errors
             )
     return render_template('battery_health_status.html', errors={})
+
+
+
+
+
+
+# Load the model using pickle
+with open('behavior.pkl', 'rb') as file:
+    model = pickle.load(file)
+
+fatigue_level_encoder = LabelEncoder()
+fatigue_level_encoder.fit(['medium', 'high','low'])  # Add all possible values here
+
+road_condition_encoder = LabelEncoder()
+road_condition_encoder.fit(['wet', 'dry'])  # Add all possible values here
+
+# Define a mapping for the predicted behavior
+behavior_mapping = {
+    0: 'Normal',
+    1: 'Cautious',
+    2: 'Aggressive',
+    3: 'Risky'
+}
+
+def driver_behavior_from_input(speed, acceleration, fatigue_level, road_condition):
+    # Encode fatigue_level and road_condition into numeric values
+    encoded_fatigue_level = fatigue_level_encoder.transform([fatigue_level])[0]
+    encoded_road_condition = road_condition_encoder.transform([road_condition])[0]
+
+    # Prepare the input data for prediction
+    input_data = [[speed, acceleration, encoded_fatigue_level, encoded_road_condition]]  # Adjust based on your model's expected format
+
+    # Predict behavior using the model
+    predicted_behavior_numeric = model.predict(input_data)[0]  # Assuming single prediction
+
+    # Log the numeric prediction for debugging
+    print(f"Predicted numeric behavior: {predicted_behavior_numeric}")
+
+    # Map numeric prediction to the corresponding label
+    predicted_behavior = behavior_mapping.get(predicted_behavior_numeric, 'Unknown')
+    return predicted_behavior
+
+
+@app.route('/driver_behavior', methods=['GET', 'POST'])
+def driver_behavior():
+    errors = {}
+    behavior = None
+
+    if request.method == 'POST':
+        speed = request.form.get('speed')
+        acceleration = request.form.get('acceleration')
+        fatigue_level = request.form.get('fatigue_level')
+        road_condition = request.form.get('road_condition')
+
+        # Validate inputs
+        if not speed or not speed.replace('.', '', 1).isdigit():
+            errors['speed'] = "Speed must be a numeric value."
+        if not acceleration or not acceleration.replace('.', '', 1).isdigit():
+            errors['acceleration'] = "Acceleration must be a numeric value."
+        if not fatigue_level:
+            errors['fatigue_level'] = "Fatigue level cannot be empty."
+        if not road_condition:
+            errors['road_condition'] = "Road condition cannot be empty."
+
+        if errors:
+            return render_template('driver_behavior.html', errors=errors)
+
+        # Convert to floats if valid
+        speed = float(speed)
+        acceleration = float(acceleration)
+
+        # Predict behavior using the model
+        behavior = driver_behavior_from_input(speed, acceleration, fatigue_level, road_condition)
+
+        return render_template('driver_behavior.html', errors=errors, behavior=behavior)
+
+    return render_template('driver_behavior.html', errors=errors, behavior=behavior)
+
+
+
+
+
 
 
 
